@@ -1,0 +1,7 @@
+fastapi==0.95.0
+uvicorn==0.23.1
+psycopg2==2.9.5
+sqlalchemy==2.0.17
+python-dotenv==1.0.0  # Si usas dotenv para leer las variables de entorno localmente
+passlib==1.7.4
+
