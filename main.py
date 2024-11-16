@@ -20,6 +20,10 @@ def get_db():
     finally:
         db.close()
 
+@app.get("/")
+def read_root():
+    return {"message": "Welcome to my API!"}
+
 @app.post("/users/")  # response_model es opcional
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     existing_user_username = db.query(User).filter(User.username == user.username).first()
