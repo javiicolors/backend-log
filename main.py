@@ -3,8 +3,8 @@ from fastapi import FastAPI, Depends, HTTPException, status, Response
 from sqlalchemy.orm import Session
 #from database import SessionLocal, engine, Base
 from supabase_ import SessionLocal, engine, Base
-from models import User
-import schemas
+from models import User, Download
+import schemas 
 from schemas.user import LoginData
 
 app = FastAPI()
@@ -66,5 +66,20 @@ def login(data: LoginData, db: Session = Depends(get_db)):
             detail="Username or password is incorrect",
         )
 
-    return {"message": "Login successful"}
+    return {"message": "Login successful", "user_id": user.id}  # Agrega el user_id a la respuesta
+
+
+@app.post("/downloads/")
+def register_download(download: schemas.DownloadCreate, db: Session = Depends(get_db)):
+    # Crear un registro de descarga
+    new_download = Download(user_id=download.user_id, filename=download.filename)
+    db.add(new_download)
+    db.commit()
+    db.refresh(new_download)
+    return new_download
+
+@app.get("/downloads/{user_id}")
+def get_user_downloads(user_id: int, db: Session = Depends(get_db)):
+    downloads = db.query(Download).filter(Download.user_id == user_id).all()
+    return downloads
 

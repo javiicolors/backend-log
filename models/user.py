@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String
+from sqlalchemy.orm import relationship
 from supabase_ import Base
 from passlib.context import CryptContext
 
@@ -12,6 +13,9 @@ class User(Base):
     username = Column(String, unique=True, index=True)
     email = Column(String, unique=True, index=True)
     hashed_password = Column(String)
+    # Relación con Download
+    downloads = relationship("Download", back_populates="user", cascade="all, delete-orphan")
+
 
     # Método de clase para cifrar la contraseña
     @classmethod
